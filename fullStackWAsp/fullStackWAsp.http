@@ -1,0 +1,6 @@
+@fullStackWAsp_HostAddress = http://localhost:5122
+
+GET {{fullStackWAsp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
