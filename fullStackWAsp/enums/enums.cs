@@ -11,4 +11,9 @@
         Series,
         Movies,
     }
+    public enum Role
+    {
+        Admin,
+        User,
+    }
 }
