@@ -22,16 +22,53 @@ namespace fullStackWAsp.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("fullStackWAsp.Classes.MediaEntity", b =>
+            modelBuilder.Entity("EpisodeEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("DurationSeconds")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("SeasonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeasonId");
+
+                    b.ToTable("Episodes");
+                });
+
+            modelBuilder.Entity("MediaEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("BannerUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Code")
@@ -45,7 +82,6 @@ namespace fullStackWAsp.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("Duration")
@@ -56,13 +92,12 @@ namespace fullStackWAsp.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("IntroVideoUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MediaType")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ReleaseDate")
+                    b.Property<DateTimeOffset>("ReleaseDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Slug")
@@ -85,6 +120,71 @@ namespace fullStackWAsp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Medias");
+                });
+
+            modelBuilder.Entity("SeasonEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MediaId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("Seasons");
+                });
+
+            modelBuilder.Entity("EpisodeEntity", b =>
+                {
+                    b.HasOne("SeasonEntity", "Season")
+                        .WithMany("Episodes")
+                        .HasForeignKey("SeasonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Season");
+                });
+
+            modelBuilder.Entity("SeasonEntity", b =>
+                {
+                    b.HasOne("MediaEntity", "Media")
+                        .WithMany("Seasons")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Media");
+                });
+
+            modelBuilder.Entity("MediaEntity", b =>
+                {
+                    b.Navigation("Seasons");
+                });
+
+            modelBuilder.Entity("SeasonEntity", b =>
+                {
+                    b.Navigation("Episodes");
                 });
 #pragma warning restore 612, 618
         }

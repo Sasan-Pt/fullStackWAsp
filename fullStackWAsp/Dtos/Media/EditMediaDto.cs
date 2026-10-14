@@ -13,9 +13,9 @@ namespace fullStackWAsp.Dtos.Media
         
         public required bool SubTitle { get; set; }
         public long Duration { get; set; }
-        public string Description { get; set; }
-        public string IntroVideoUrl { get; set; }
-        public string BannerUrl { get; set; }
+        public required string Description { get; set; }
+        public string? IntroVideoUrl { get; set; }
+        public string? BannerUrl { get; set; }
         public Status Status { get; set; }
     }
 }

@@ -32,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

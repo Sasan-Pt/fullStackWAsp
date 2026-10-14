@@ -7,7 +7,7 @@ public class MediaEntity : BaseEntity
     public MediaType MediaType { get; set; }
 
     public DateTimeOffset ReleaseDate { get; set; }
-
+ 
     public required string Code { get; set; }
 
     public required string Title { get; set; }

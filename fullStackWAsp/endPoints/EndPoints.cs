@@ -40,7 +40,7 @@ namespace fullStackWAsp.endPoints
 
             });
 
-            rootApi.MapPost("/update/{id}", (AppDbContext context, [FromBody] EditMediaDto dto,int id) => {
+            rootApi.MapPost("/update/{id}", (AppDbContext context, [FromBody] EditMediaDto dto,Guid id) => {
                 var selectedMedia = context.Medias.Where(p => p.Id == id).FirstOrDefault();
                 if (selectedMedia is not null)
                 {

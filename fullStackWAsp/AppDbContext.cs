@@ -13,11 +13,24 @@ namespace fullStackWAsp
 
         public DbSet<MediaEntity> Medias { get; set; }
 
+        public DbSet<SeasonEntity> Seasons { get; set; }
+
+        public DbSet<EpisodeEntity> Episodes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<MediaEntity>()
+
+      .Property(x => x.Id)
+      .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<SeasonEntity>()
+                .Property(x => x.Id)
+                .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<EpisodeEntity>()
                 .Property(x => x.Id)
                 .HasDefaultValueSql("gen_random_uuid()");
 
