@@ -1,6 +1,7 @@
 ﻿using fullStackWAsp.Dtos.Media;
 using fullStackWAsp.enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace fullStackWAsp.endPoints
 {
@@ -9,9 +10,33 @@ namespace fullStackWAsp.endPoints
         public static void MapMediasEndpoints(this WebApplication app)
         {
             RouteGroupBuilder rootApi = app.MapGroup("/api/media/").WithTags("media");
+
+            rootApi.MapGet("/carousellanding", async (
+                AppDbContext context,
+                CancellationToken cancellationToken) =>
+            {
+                var requestedJson = await context.Medias
+                    .AsNoTracking()
+                    .OrderByDescending(m => m.ReleaseDate)
+                    .Take(5)
+                    .Select(m => new CarouselDto
+                    {
+                        BannerUrl = m.BannerUrl,
+                        Description = m.Description,
+                        EnTitle = m.EnTitle,
+                        Slug = m.Slug,
+                        Title = m.Title,
+                        MediaType = m.MediaType
+                    })
+                    .ToListAsync(cancellationToken);
+
+                return TypedResults.Ok(requestedJson);
+            });
+
             rootApi.MapGet("/all", (AppDbContext context) => {
 
                 var courses = context.Medias;
+           
                 return TypedResults.Ok(courses);
             });
 
